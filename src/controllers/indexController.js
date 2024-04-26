@@ -1,8 +1,10 @@
 // src/controllers/indexControllers.js
 // 
-const {postCreateUser, getAllUsers}=require("./userController");
+const {postCreateUser, getAllUsers, getUserById}=require("./userController");
 
 module.exports = {
     postCreateUser,
-    getAllUsers
+    getAllUsers,
+    getUserById,
+    
 }

@@ -31,10 +31,25 @@ const getAllUsers=  async (req,res)=>{
   response(res,200,users);
 };
 
+//Función para obtener un usuario por su ID
+const getUserById=  async (req,res)=>{
+  //Consulto todos los usuarios de la base de datos
+  const user=await User.findById(req.params.id);
+  //si no existe usuario
+  if(!user){
+    throw new ClientError("Usuario no encontrado", 404);
+  }
+
+  //Responde con el usuario
+  response(res, 200, usuario);
+ 
+};
+
 
 //La funcion catch tiene que tratar la funcion 
 module.exports={
    postCreateUser:catchAsync(postCreateUser),
-  
-  getAllUsers:catchAsync(getAllUsers)
+   getAllUsers:catchAsync(getAllUsers),
+   getUserById:catchAsync(getUserById)
+
 }
