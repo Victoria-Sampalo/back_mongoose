@@ -48,10 +48,20 @@ const validateDateOfBirth = (date) => {
   return true;
 };
 
+
+
+// Función para eliminar la parte de la hora de una fecha
+function removeTimeFromDate(date) {
+  if (!date) return null;
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+}
+
   // Exporta las funciones de validación
 module.exports = {
     validateName,
     validateEmail,
     validateText, 
-    validateDateOfBirth
+    validateDateOfBirth,
+    removeTimeFromDate
   };

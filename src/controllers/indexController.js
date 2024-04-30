@@ -7,6 +7,7 @@ module.exports = {
     getAllUsers,
     getUserById,
     deleteUserById,
-    updateUserById
+    updateUserById, 
+  
     
 }

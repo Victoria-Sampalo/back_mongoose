@@ -1,15 +1,8 @@
 // src/controllers/userController.js
 const {User} = require('../models/indexModels');
-const { catchAsync, response, ClientError, validateName, validateEmail, validateText, validateDateOfBirth } = require('../utils/indexUtils');
+const { catchAsync, response, ClientError, validateName, validateEmail, validateText, validateDateOfBirth, removeTimeFromDate, hashPassword } = require('../utils/indexUtils');
 
 
-
-// Función para eliminar la parte de la hora de una fecha
-function removeTime(date) {
-  if (!date) return null;
-  date.setHours(0, 0, 0, 0);
-  return date;
-}
 //crear usuario
 const postCreateUser= async(req, res)=>{
 // nota eli doble comprobación, primero por seguridad en el frontend nos aseguraremos que los datos enviados sean correctos,
@@ -27,15 +20,21 @@ const postCreateUser= async(req, res)=>{
   !validateDateOfBirth(new Date(req.body.date_of_birth))) {
 throw new ClientError("Los datos no son correctos", 400);
 }
+
+   // Generar el hash de la contraseña
+   const hashedPassword = await hashPassword(req.body.password);
+
+
+
   const newUser=new User({
       userName: req.body.userName,
       email: req.body.email,
-      password: req.body.password,
+      password:  hashedPassword,
       full_name: req.body.full_name,
       billing_address: req.body.billing_address,
       country: req.body.country,
       phone: req.body.phone,
-      date_of_birth: removeTime(new Date(req.body.date_of_birth)), // Eliminar la hora de la fecha de nacimiento
+      date_of_birth: removeTimeFromDate(new Date(req.body.date_of_birth)), // Eliminar la hora de la fecha de nacimiento
       registration_Date: Date.now() // Fecha actual
   });
 
