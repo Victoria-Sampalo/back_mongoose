@@ -3,7 +3,7 @@
 const { response } = require("./response");
 const { catchAsync } = require("./catchAsync");
 const { ClientError } = require("./clientError");
-const { validateName, validateEmail } = require("./utils");
+const { validateName, validateEmail, validateText, validateDateOfBirth } = require("./utils");
 const resError = require("./resError");
 
 module.exports = {
@@ -13,4 +13,6 @@ module.exports = {
   ClientError,
   validateName,
   validateEmail,
+  validateText,
+  validateDateOfBirth
 };
