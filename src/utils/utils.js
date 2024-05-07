@@ -9,6 +9,15 @@ const validateName=(valor)=>{
       return true;
 }
 
+// Función para validar un número (precio)
+const validateNumber = (value) => {
+  // Comprueba si el valor es nulo, no es un número o es negativo
+  if (value === null || isNaN(value) || value < 0) {
+      return false;
+  }
+  return true;
+}
+
 
 // Función para validar un campo de tipo email
 const validateEmail = (email) => {
@@ -35,8 +44,8 @@ const validateText = (text) => {
 };
 
 
-// Función para validar la fecha de nacimiento
-const validateDateOfBirth = (date) => {
+// Función para validar la fecha 
+const validateDate = (date) => {
   // Verificar si la fecha es nula o no es una instancia de Date
   if (!date || !(date instanceof Date)) {
     return false;
@@ -57,11 +66,40 @@ function removeTimeFromDate(date) {
   return date;
 }
 
+// Función para generar un SKU único ficticio
+const generateUniqueSKU = async () => {
+  // Generar un SKU aleatorio
+  const randomSKU = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+  // Verificar si el SKU generado ya existe en la base de datos
+  const existingProduct = await Product.findOne({ sku: randomSKU });
+
+  // Si el SKU ya existe, llamar recursivamente a la función para generar uno nuevo
+  if (existingProduct) {
+    return generateUniqueSKU();
+  }
+
+  // Si el SKU es único, devolverlo
+  return randomSKU;
+};
+
+const calculateTotalPrice=(lista)=>{
+  let total=0;
+  for (const item of lista) {
+      total+=(item.quantity*item.price)   
+  }
+  return total
+}
+
+
   // Exporta las funciones de validación
 module.exports = {
     validateName,
     validateEmail,
     validateText, 
-    validateDateOfBirth,
-    removeTimeFromDate
+    validateDate,
+    removeTimeFromDate,
+    validateNumber,
+    generateUniqueSKU,
+    calculateTotalPrice
   };

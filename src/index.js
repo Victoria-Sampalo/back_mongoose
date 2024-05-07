@@ -7,6 +7,11 @@ require('dotenv').config()
 
 // Importar las rutas de usuarios
 const userRoutes=require("./routes/userRoutes");
+// Importar las rutas de productos
+const productRoutes=require("./routes/productRoutes");
+
+//importar las rutas de detalle orders
+const orderRoutes=require("./routes/orderRoutes");
 
 
 //Creamos la instancia
@@ -16,9 +21,19 @@ const app=express();
 app.use(express.json());
 
 
-// Middleware para manejar las rutas de usuarios
+// Middleware para manejar las rutas
+//de usuarios
 // app.use('/',userRoutes)
 app.use('/api',userRoutes)
+//de productos
+
+app.use('/api',productRoutes)
+//de orders
+
+app.use('/api',orderRoutes)
+
+
+
 
 // le asignamos una constante a las rutas de usuario
 // donde escucha el servidor

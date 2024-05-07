@@ -10,17 +10,15 @@ const mongoose = require("mongoose");
 
 
 const userSchema = new mongoose.Schema({
-  userName: { type: String, required: true, unique: true },
+  user_name: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   full_name: { type: String },
   billing_address: { type: String },
- 
-  
   country: { type: String },
   phone: { type: String },
   date_of_birth: { type: Date, set: removeTime },
-  registration_Date: { type: Date, default: Date.now }
+  registration_date: { type: Date, default: Date.now }
 });
 
 // Función para eliminar la parte de la hora de una fecha

@@ -1,6 +1,6 @@
 // src/controllers/userController.js
 const {User} = require('../models/indexModels');
-const { catchAsync, response, ClientError, validateName, validateEmail, validateText, validateDateOfBirth, removeTimeFromDate, hashPassword } = require('../utils/indexUtils');
+const { catchAsync, response, ClientError, validateName, validateEmail, validateText, validateDate, removeTimeFromDate, hashPassword } = require('../utils/indexUtils');
 
 
 //crear usuario
@@ -10,14 +10,13 @@ const postCreateUser= async(req, res)=>{
 // !req.body.full_name || !req.body.email ||
       console.log(req.body)
     // Validar los datos del usuario antes de crearlo
-  if (!validateText(req.body.userName) ||
+  if (!validateText(req.body.user_name) ||
   !validateEmail(req.body.email) ||
-  !validateText(req.body.password) ||
   !validateText(req.body.full_name) ||
   !validateText(req.body.billing_address) ||
   !validateText(req.body.country) ||
   !validateText(req.body.phone) ||
-  !validateDateOfBirth(new Date(req.body.date_of_birth))) {
+  !validateDate(new Date(req.body.date_of_birth))) {
 throw new ClientError("Los datos no son correctos", 400);
 }
 
@@ -27,7 +26,7 @@ throw new ClientError("Los datos no son correctos", 400);
 
 
   const newUser=new User({
-      userName: req.body.userName,
+      user_name: req.body.user_name,
       email: req.body.email,
       password:  hashedPassword,
       full_name: req.body.full_name,
@@ -35,7 +34,7 @@ throw new ClientError("Los datos no son correctos", 400);
       country: req.body.country,
       phone: req.body.phone,
       date_of_birth: removeTimeFromDate(new Date(req.body.date_of_birth)), // Eliminar la hora de la fecha de nacimiento
-      registration_Date: Date.now() // Fecha actual
+      registration_date: Date.now() // Fecha actual
   });
 
     //Guardo el nuevo usuario
@@ -90,40 +89,6 @@ const deleteUserById = async (req, res) => {
 
 
 // //Función para modificar un usuario por su ID.
-// const updateUserById = async (req, res) => {
-//   try {
-//       const userId = req.body.id;
-//       const updateText = {};
-
-//       // Verifica si se proporcionaron datos válidos para actualizar
-//       if (req.body.full_name && validateName(req.body.full_name)) {
-//           updateText['full_name'] = req.body.full_name;
-//       }
-//       if (req.body.email && validateEmail(req.body.email)) {
-//           updateText['email'] = req.body.email;
-//       }
-
-//       // Verifica si hay datos válidos para actualizar
-//       if (Object.keys(updateText).length === 0) {
-//           return response(res, 400, { error: "No se proporcionaron datos válidos para actualizar" });
-//       }
-
-//       // Busca y actualiza el usuario por su ID en la base de datos
-//       const userUpdate = await User.findByIdAndUpdate(userId, updateText, { new: true });
-
-//       // Si no se encuentra el usuario, devuelve un error 404
-//       if (!userUpdate) {
-//           throw new ClientError('Usuario no encontrado', 404);
-//       }
-
-//       // Responde con el usuario actualizado
-//       response(res, 200, { message: "Usuario actualizado correctamente", user: userUpdate });
-//   } catch (error) {
-//       console.error("Error al actualizar usuario:", error);
-//       response(res, 500, { error: "Ha ocurrido un error al actualizar el usuario" });
-//   }
-// };
-
 const updateUserById = async (req, res) => {
   console.log("updateUser... " +req.body.id);
   const userId = { _id: req.body.id};
@@ -131,12 +96,35 @@ const updateUserById = async (req, res) => {
   console.log(req.body);
 
   // Verifica si se proporcionaron datos válidos para actualizar
-      if (req.body.full_name && validateName(req.body.full_name)) {
-          updateText['full_name'] = req.body.full_name;
-      }
-      if (req.body.email && validateEmail(req.body.email)) {
-          updateText['email'] = req.body.email;
-      }
+  if (req.body.user_name && validateText(req.body.user_name)) {
+    updateText['user_name'] = req.body.user_name;
+  }
+  if (req.body.email && validateEmail(req.body.email)) {
+    updateText['email'] = req.body.email;
+  }
+  if (req.body.password && validateText(req.body.password)) {
+    // Si se proporciona una nueva contraseña, genera el hash
+    const hashedPassword = await hashPassword(req.body.password);
+    updateText['password'] = hashedPassword;
+  }
+  if (req.body.full_name && validateText(req.body.full_name)) {
+    updateText['full_name'] = req.body.full_name;
+  }
+  if (req.body.billing_address && validateText(req.body.billing_address)) {
+    updateText['billing_address'] = req.body.billing_address;
+  }
+  if (req.body.default_shipping_address && validateText(req.body.default_shipping_address)) {
+    updateText['default_shipping_address'] = req.body.default_shipping_address;
+  }
+  if (req.body.country && validateText(req.body.country)) {
+    updateText['country'] = req.body.country;
+  }
+  if (req.body.phone && validateText(req.body.phone)) {
+    updateText['phone'] = req.body.phone;
+  }
+  if (req.body.date_of_birth && validateDate(new Date(req.body.date_of_birth))) {
+    updateText['date_of_birth'] = removeTimeFromDate(new Date(req.body.date_of_birth));
+  }
   
   // Busca y actualiza el usuario por su ID en la base de datos
   const userUpdate = await User.findByIdAndUpdate(userId, updateText, { new: true });
