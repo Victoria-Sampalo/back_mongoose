@@ -10,48 +10,87 @@ const {
 } = require("../utils/indexUtils");
 
 // Crear detalle de pedido
-const postCreateOrder = async (req, res) => {
-    try {
-         // Verificar si se proporcionó una lista de productos
-         if (!req.body.list_products) {
-            throw new ClientError('Lista de productos no proporcionada', 400);
-        }
+// const postCreateOrder = async (req, res) => {
+//     try {
+//          // Verificar si se proporcionó una lista de productos
+//          if (!req.body.list_products) {
+//             throw new ClientError('Lista de productos no proporcionada', 400);
+//         }
 
-            // Parsear la lista de productos
-            let listProducts;
-            try {
-                listProducts = JSON.parse(req.body.list_products);
-            } catch (error) {
-                throw new ClientError('Error al analizar la lista de productos', 400);
-            }
+//             // Parsear la lista de productos
+//             let listProducts;
+//             try {
+//                 listProducts = JSON.parse(req.body.list_products).catch((error)=> throw new ClientError('Error al analizar la lista de productos', 400));
+                
+//             } catch (error) {
+//                 throw new ClientError('Error al analizar la lista de productos', 400);
+//             }
         
-        // Crear el nuevo detalle de pedido
-        const newDetailOrder = new Order({
-            id_user: req.body.id_user, // Se asume que req.body.id_user contiene el ID del usuario
-            total_cost: calculateTotalPrice(listProducts), // Calcular el costo total
-            order_date: new Date(), // Fecha actual
-            list_products: listProducts,
-            order_status: req.body.order_status || 'activo', // Estado por defecto es 'activo'
-            shipping_address: req.body.shipping_address,
-            payment_method: req.body.payment_method,
-            shipping_date: Date.now(), // Fecha actual
-            delivery_date: Date.now(), // Fecha actual
-        });
+//         // Crear el nuevo detalle de pedido
+//         const newDetailOrder = new Order({
+//             id_user: req.body.id_user, // Se asume que req.body.id_user contiene el ID del usuario
+//             total_cost: calculateTotalPrice(listProducts), // Calcular el costo total
+//             order_date: new Date(), // Fecha actual
+//             list_products: listProducts,
+//             order_status: req.body.order_status || 'activo', // Estado por defecto es 'activo'
+//             shipping_address: req.body.shipping_address,
+//             payment_method: req.body.payment_method,
+//             shipping_date: Date.now(), // Fecha actual
+//             delivery_date: Date.now(), // Fecha actual
+//         });
 
-        // Guardar el nuevo detalle de pedido en la base de datos
-        const savedDetailOrder = await newDetailOrder.save();
+//         // Guardar el nuevo detalle de pedido en la base de datos
+//         const savedDetailOrder = await newDetailOrder.save();
 
-        // Enviar el detalle de pedido guardado como respuesta
-        response(res, 200, savedDetailOrder);
-    } catch (error) {
-        console.error("Error al crear detalle de pedido:", error);
-        if (error instanceof ClientError) {
-            response(res, error.status, { error: error.message });
-        } else {
-            response(res, 500, { error: "Ha ocurrido un error al crear el detalle de pedido" });
+//         // Enviar el detalle de pedido guardado como respuesta
+//         response(res, 200, savedDetailOrder);
+//     } catch (error) {
+//         console.error("Error al crear detalle de pedido:", error);
+//         if (error instanceof ClientError) {
+//             response(res, error.status, { error: error.message });
+//         } else {
+//             response(res, 500, { error: "Ha ocurrido un error al crear el detalle de pedido" });
+//         }
+//     }
+// }
+
+const postCreateOrder = async (req, res) => {
+  
+       // Verificar si se proporcionó una lista de productos
+       if (!req.body.list_products) {
+          throw new ClientError('Lista de productos no proporcionada', 400);
+      }
+
+        // Parsear la lista de productos
+        let listProducts;
+        try {
+            listProducts = JSON.parse(req.body.list_products);
+        } catch (error) {
+            throw new ClientError('Error al analizar la lista de productos', 400);
         }
-    }
+
+      
+      // Crear el nuevo detalle de pedido
+      const newDetailOrder = new Order({
+          id_user: req.body.id_user, // Se asume que req.body.id_user contiene el ID del usuario
+          total_cost: calculateTotalPrice(listProducts), // Calcular el costo total
+          order_date: new Date(), // Fecha actual
+          list_products: listProducts,
+          order_status: req.body.order_status || 'activo', // Estado por defecto es 'activo'
+          shipping_address: req.body.shipping_address,
+          payment_method: req.body.payment_method,
+          shipping_date: Date.now(), // Fecha actual
+          delivery_date: Date.now(), // Fecha actual
+      });
+
+      // Guardar el nuevo detalle de pedido en la base de datos
+      const savedDetailOrder = await newDetailOrder.save();
+
+      // Enviar el detalle de pedido guardado como respuesta
+      response(res, 200, savedDetailOrder);
+  
 }
+
 
 
 // Obtener todos los detalles de pedido

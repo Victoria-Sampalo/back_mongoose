@@ -23,8 +23,6 @@ throw new ClientError("Los datos no son correctos", 400);
    // Generar el hash de la contraseña
    const hashedPassword = await hashPassword(req.body.password);
 
-
-
   const newUser=new User({
       user_name: req.body.user_name,
       email: req.body.email,
@@ -34,7 +32,9 @@ throw new ClientError("Los datos no son correctos", 400);
       country: req.body.country,
       phone: req.body.phone,
       date_of_birth: removeTimeFromDate(new Date(req.body.date_of_birth)), // Eliminar la hora de la fecha de nacimiento
-      registration_date: Date.now() // Fecha actual
+      registration_date: Date.now(), // Fecha actual
+      type: req.body.type || 'normal', // Asignar el tipo de usuario proporcionado o 'normal' por defecto
+
   });
 
     //Guardo el nuevo usuario
@@ -125,6 +125,15 @@ const updateUserById = async (req, res) => {
   if (req.body.date_of_birth && validateDate(new Date(req.body.date_of_birth))) {
     updateText['date_of_birth'] = removeTimeFromDate(new Date(req.body.date_of_birth));
   }
+  // Verificar si se proporcionó un tipo de usuario válido
+if (req.body.type) {
+  if (!['normal', 'admin'].includes(req.body.type)) {
+    throw new ClientError('Tipo de usuario inválido', 400);
+  } else {
+    // Añadir el tipo de usuario al objeto de actualización si es válido
+    updateText['type'] = req.body.type;
+  }
+}
   
   // Busca y actualiza el usuario por su ID en la base de datos
   const userUpdate = await User.findByIdAndUpdate(userId, updateText, { new: true });

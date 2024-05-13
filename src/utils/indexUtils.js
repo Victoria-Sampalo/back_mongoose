@@ -6,6 +6,7 @@ const { ClientError } = require("./clientError");
 const { validateName, validateEmail, validateText, validateNumber, validateDate, removeTimeFromDate, generateUniqueSKU, calculateTotalPrice } = require("./utils");
 const resError = require("./resError");
 const { hashPassword } = require("./passwordUtils");
+const { generateRandomProducts } = require("./generatorUtils");
 
 
 
@@ -23,4 +24,5 @@ module.exports = {
   hashPassword,
   generateUniqueSKU,
   calculateTotalPrice,
+  generateRandomProducts
 };

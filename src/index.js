@@ -2,8 +2,10 @@
 const express=require('express');
 const mongoose=require("mongoose")
 const resError = require('./utils/resError');
+const cors = require('cors');
 // usamos dtenv para las variables de entorno
 require('dotenv').config()
+
 
 // Importar las rutas de usuarios
 const userRoutes=require("./routes/userRoutes");
@@ -13,6 +15,9 @@ const productRoutes=require("./routes/productRoutes");
 //importar las rutas de detalle orders
 const orderRoutes=require("./routes/orderRoutes");
 
+const generateRandomProducts = require('./utils/indexUtils'); // Asegúrate de tener la ruta correcta
+
+
 
 //Creamos la instancia
 const app=express();
@@ -20,6 +25,7 @@ const app=express();
 // Middleware para manejar datos JSON
 app.use(express.json());
 
+app.use(cors());
 
 // Middleware para manejar las rutas
 //de usuarios
@@ -31,6 +37,7 @@ app.use('/api',productRoutes)
 //de orders
 
 app.use('/api',orderRoutes)
+
 
 
 

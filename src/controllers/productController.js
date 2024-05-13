@@ -1,3 +1,4 @@
+//./src/constrollers/productController.js
 const { Product } = require("../models/indexModels");
 const {
   catchAsync,
@@ -23,18 +24,6 @@ const postCreateProduct = async (req, res) => {
   ) {
     throw new ClientError("Los datos no son correctos", 400);
   }
-
-  //     if (!validateText(req.body.sku) ||
-  //     !validateText(req.body.name) ||
-  //     !validateNumber(req.body.price) ||
-  //     !validateText(req.body.brand) ||
-  //     !validateText(req.body.category) ||
-  //     !validateText(req.body.description) ||
-  //     !Array.isArray(req.body.images) ||
-  //     !validateDate(req.body.creation_date) ||
-  //     !validateNumber(req.body.stock)) {
-  //     throw new ClientError("Los datos no son correctos", 400);
-  // }
 
   const newProduct = new Product({
     sku: await generateUniqueSKU(),
@@ -140,10 +129,57 @@ const updateProductById = async (req, res) => {
   response(res, 200, productUpdate);
 };
 
+//un get que me traiga el nombre de las categorias existentes
+// Función para obtener todas las categorias
+const getAllCategories = async (req, res) => {
+  // Consultar todos los productos de la base de datos
+  const categories = await Product.distinct("category");
+
+  // Responder con los productos
+  response(res, 200, categories);
+};
+
+// Función para buscar productos por filtros
+const postProductsByFilters = async (req, res) => {
+  // Obtener los parámetros de consulta de la solicitud GET
+  const { minPrice, category } = req.body;
+  console.log(req.body.minPrice)
+  console.log(req.body.category)
+
+  // Construir el objeto de filtros para la consulta
+  const filters = {};
+  if (minPrice !== undefined && minPrice !== null) {
+    filters.price = { $gte: minPrice }; // Precio mayor o igual que minPrice
+  }
+  if (category !== undefined && category !== "" && category !== null) {
+    filters.category = category; // Filtrar por categoría
+  }
+  // Si no se proporciona ningún filtro, no aplicar ningún filtro en la consulta
+  if (Object.keys(filters).length === 0) {
+    // Si no hay filtros, devolver todos los productos
+    const allProducts = await Product.find();
+    return res.status(200).json(allProducts);
+  }
+  // Realizar la consulta en la base de datos
+  const products = await Product.find(filters);
+  // console.log(products)
+// const objectKeys = Object.keys(products);
+// const objectLength = objectKeys.length;
+// console.log(objectLength);
+
+  // Responder con los productos encontrados
+   res.status(200).json(products);
+};
+
+//contar los registros 
+
+
 module.exports = {
   postCreateProduct: catchAsync(postCreateProduct),
   getAllProducts: catchAsync(getAllProducts),
   getProductById: catchAsync(getProductById),
   deleteProductById: catchAsync(deleteProductById),
   updateProductById: catchAsync(updateProductById),
+  getAllCategories: catchAsync(getAllCategories),
+  postProductsByFilters: catchAsync(postProductsByFilters),
 };
