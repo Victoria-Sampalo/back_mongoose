@@ -2,6 +2,8 @@
 const { postCreateUser, getAllUsers, getUserById, deleteUserById, updateUserById } = require("./userController");
 const { postCreateProduct, getAllProducts, getProductById, deleteProductById, updateProductById, getAllCategories, postProductsByFilters } = require("./productController");
 const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById } = require("./orderController");
+const { register, login, validToken } = require("./loginController");
+const {tokenValid, tokenValidAdmin} = require("./authController");
 
 module.exports = {
     postCreateUser,
@@ -21,4 +23,10 @@ module.exports = {
     updateOrderById,
     getAllCategories,
     postProductsByFilters,
+    register,
+    login,
+    validToken,
+    tokenValid,
+    tokenValidAdmin
+
 };

@@ -15,6 +15,8 @@ const productRoutes=require("./routes/productRoutes");
 //importar las rutas de detalle orders
 const orderRoutes=require("./routes/orderRoutes");
 
+const loginRoutes=require("./routes/loginRoutes");
+
 const generateRandomProducts = require('./utils/indexUtils'); // Asegúrate de tener la ruta correcta
 
 
@@ -38,8 +40,7 @@ app.use('/api',productRoutes)
 
 app.use('/api',orderRoutes)
 
-
-
+app.use('/api',loginRoutes)
 
 
 // le asignamos una constante a las rutas de usuario

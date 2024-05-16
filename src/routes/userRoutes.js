@@ -1,20 +1,25 @@
 // routes/userRoutes.js
 const express = require('express');
 const router = express.Router()
-const {postCreateUser,getAllUsers, getUserById, deleteUserById, updateUserById} = require('../controllers/indexController')
+const {postCreateUser,getAllUsers, getUserById, deleteUserById, updateUserById, tokenValid, tokenValidAdmin} = require('../controllers/indexController')
 const bodyParser = require('body-parser');
 
-const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+//Especificación tipo de usuario necesario o ninguno.
+// /createuser ninguno
+// tokenValid -> /user/:id, deleteuser, updateuser 
+// tokenValidAdmin -> /users, 
 router.post("/createuser", urlencodedParser,postCreateUser)
 
- router.get("/users", urlencodedParser,getAllUsers)
-
-router.get("/user/:id", urlencodedParser,getUserById);
-
-router.delete("/deleteuser/:id", urlencodedParser,deleteUserById);
-
-router.put("/updateuser", urlencodedParser,updateUserById);
+//check
+ router.get("/users", urlencodedParser,tokenValidAdmin,getAllUsers)
+//check
+router.get("/user/:id", urlencodedParser,tokenValid,getUserById);
+//check
+router.delete("/deleteuser/:id", urlencodedParser,tokenValid,deleteUserById);
+//check
+router.put("/updateuser", urlencodedParser,tokenValid,updateUserById);
 
 
 module.exports = router;

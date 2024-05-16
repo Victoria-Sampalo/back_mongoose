@@ -5,8 +5,7 @@ const router = express.Router();
 const userRoutes = require('./userRoutes');
 const productRoutes = require('./productRoutes');
 const orderRoutes = require('./orderRoutes');
-
- 
+const loginRoutes= require('./loginRoutes');
 // Middleware para manejar datos JSON
 router.use(express.json());
 
@@ -14,4 +13,7 @@ router.use(express.json());
 router.use('/api/users', userRoutes);
 router.use('/api/products', productRoutes);
 router.use('/api/orders', orderRoutes);
+router.use('/api/login', loginRoutes);
+
+
 module.exports = router;
