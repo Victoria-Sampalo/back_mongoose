@@ -3,7 +3,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/indexModels');
-const { catchAsync, response, ClientError, validateName, validateEmail, validateText, validateDate, removeTimeFromDate, hashPassword, validatePass, generateToken } = require('../utils/indexUtils');
+const { catchAsync, response, ClientError, validateName, validateEmail, validateText, validateDate, removeTimeFromDate, hashPassword, validatePass, generateToken,verifyToken } = require('../utils/indexUtils');
 
 const register = async (req, res) => {
   const { email } = req.body.email;
@@ -78,7 +78,7 @@ if (!await validatePass(password, user.password)) {
 
 const validToken=async(req,res)=>{
   const token=req.body.token
-  if(verificarToken(token)){
+  if(verifyToken(token)){
       const id=jwt.decode(token)._id
       const usuario = await User.findOne({ _id: id});
       response(res,200,usuario)

@@ -107,6 +107,62 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+//Obtener los pedidos de un unico usuairo
+const getUserOrders2 = async (req, res) => {
+  try {
+    const userId = req.body.id_user;
+    console.log("ID recibido en el servidor:", userId);
+
+    if (!userId) {
+      throw new ClientError("ID de usuario no proporcionado", 400);
+    }
+
+    const userOrders = await Order.find({ id_user: userId });
+
+    if (!userOrders.length) {
+      throw new ClientError("No se encontraron facturas para este usuario", 404);
+    }
+
+    console.log(userOrders);
+
+    response(res, 200, userOrders);
+  } catch (error) {
+    console.error("Error al obtener las facturas del usuario:", error);
+    if (error instanceof ClientError) {
+      response(res, error.status, { error: error.message });
+    } else {
+      response(res, 500, { error: "Ha ocurrido un error al obtener las facturas del usuario" });
+    }
+  }
+};
+
+
+
+const getUserOrders = async (req, res) => {
+  try {
+    const userId = req.body.id_user; // Se asume que el id_user se pasa como parámetro en la URL
+    console.log("ID recibido en el servidor:", userId);
+    const userOrders = await Order.find({ id_user: userId });
+
+    if (!userOrders.length) {
+      throw new ClientError("No se encontraron facturas para este usuario", 404);
+    }
+
+    console.log(userOrders);
+
+    response(res, 200, userOrders);
+  } catch (error) {
+    console.error("Error al obtener las facturas del usuario:", error);
+    if (error instanceof ClientError) {
+      response(res, error.status, { error: error.message });
+    } else {
+      response(res, 500, { error: "Ha ocurrido un error al obtener las facturas del usuario" });
+    }
+  }
+};
+
+
+
 // Obtener un detalle de pedido por su ID
 const getOrderById = async (req, res) => {
   try {
@@ -226,4 +282,5 @@ module.exports = {
   getOrderById: catchAsync(getOrderById),
   deleteOrderById: catchAsync(deleteOrderById),
   updateOrderById: catchAsync(updateOrderById),
+  getUserOrders:catchAsync(getUserOrders),
 };

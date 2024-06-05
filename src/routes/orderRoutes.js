@@ -4,7 +4,7 @@ const router = express.Router()
 
 const bodyParser = require('body-parser');
 
-const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById } = require('../controllers/orderController');
+const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById, getUserOrders } = require('../controllers/orderController');
 const {tokenValid,tokenValidAdmin} =require ('../controllers/indexController.js')
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -16,7 +16,9 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 // tokenValidAdmin -> /orders, 
 router.post("/createorder", urlencodedParser,tokenValid, postCreateOrder);
 
-router.get("/orders", urlencodedParser,tokenValid, getAllOrders);
+router.get("/orders", urlencodedParser,tokenValidAdmin, getAllOrders);
+
+router.post("/getuserorders", urlencodedParser,tokenValid, getUserOrders);
 
 router.get("/order/:id", urlencodedParser,tokenValid, getOrderById);
 
