@@ -22,6 +22,8 @@ const userSchema = new mongoose.Schema({
   type: { type: String, enum: ['normal', 'admin'], default: 'normal', required: true },
 });
 
+//se ha quitado genero como atributo, se pondrá en un futuro. 
+
 // Función para eliminar la parte de la hora de una fecha
 function removeTime(date) {
   // Si el valor es nulo, devuelve nulo

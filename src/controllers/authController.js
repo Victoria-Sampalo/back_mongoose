@@ -31,6 +31,8 @@ const tokenValidAdmin = async (req, res, next) => {
         res.status(409).send({ error: true, message: "El token no es válido" }); // Devuelve un error 409 con un mensaje
     }
 
+    console.log(verification);
+
     if (verification.type && verification.type == 'admin') { // Si el usuario tiene el rol de administrador
         console.log("es admin")
         console.log("verification:", verification);
