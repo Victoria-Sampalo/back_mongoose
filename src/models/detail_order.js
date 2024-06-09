@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 // Define el esquema para la cantidad de productos
 const cantidadProductsSchema = new mongoose.Schema({
     productId: {
-        type: mongoose.Schema.Types.ObjectId,
+        // type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true
     },
     quantity: {
@@ -34,7 +35,7 @@ const detailOrderSchema = new mongoose.Schema({
     list_products: [cantidadProductsSchema], // Array de cantidad de productos
     order_status: {
         type: String,
-        enum: ['activo', 'preparado', 'enviado', 'completo'],
+        enum: ['activo', 'preparado','pendiente de pago', 'enviado', 'completo'],
         default: 'activo'
     },
     shipping_address: {
