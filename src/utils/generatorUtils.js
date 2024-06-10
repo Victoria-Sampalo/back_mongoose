@@ -33,19 +33,20 @@ async function generateRandomProducts(req, res) {
   // Conjuntos de valores posibles para cada campo
   const brands = ['Brand A', 'Brand B', 'Brand C'];
   const categories = ['Elbow_Pads', 'Knee_Pads', 'Wrist_Guards', 'Backpacks', 'Vests', 'Belts', 'Ropes', 'Insoles', 'Other'];
-  const descriptions = ['Description A', 'Description B', 'Description C'];
-  const images = [urlImageTest,'https://example.com/image1.jpg', 'https://example.com/image2.jpg'];
-    
+  const descriptions = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent metus augue, ullamcorper nec massa nec, varius ullamcorper tortor. Nunc et sem a sapien tristique dignissim ut quis lacus. Nam eu tincidunt turpis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut id augue massa. Phasellus non cursus lorem, quis semper turpis. Cras aliquet lacus leo, et placerat tellus fringilla in. Aliquam a efficitur justo. Nam eget nibh condimentum, elementum libero vel, fermentum lorem. Suspendisse vel placerat mauris, et pulvinar neque. ', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent metus augue, ullamcorper nec massa nec, varius ullamcorper tortor. Nunc et sem a sapien tristique dignissim ut quis lacus. Nam eu tincidunt turpis. Interdum et malesuada fames ac ante ipsum primis in faucibus. '];
+  const images = [urlImageTest];
+  
   let respuesta;
   
   // Crear 50 productos aleatorios
   for (let i = 0; i < 40; i++) {
+    const category = getRandomValue(categories);
     const newProduct = new Product({
       sku: await generateUniqueSKU(),
-      name: `Product ${i + 1}`,
+      name: `${category} ${i + 1}`,
       price: Math.floor(Math.random() * 100) + 1, // Precio aleatorio entre 1 y 100
       brand: getRandomValue(brands),
-      category: getRandomValue(categories),
+      category: category,
       description: getRandomValue(descriptions),
       images: images,
       stock: Math.floor(Math.random() * 1000) + 1, // Stock aleatorio entre 1 y 1000

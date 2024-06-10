@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { postCreateProduct, getAllProducts, getProductById, deleteProductById, updateProductById, getAllCategories, postProductsByFilters, validToken, tokenValidAdmin, tokenValid } = require('../controllers/indexController');
+const { postCreateProduct, getAllProducts, getProductById, deleteProductById, updateProductById, getAllCategories, postProductsByFilters, validToken, tokenValidAdmin, tokenValid, postCountProductsAdminFilters } = require('../controllers/indexController');
 const bodyParser = require('body-parser');
 const { generateRandomProducts } = require('../utils/generatorUtils');
 
@@ -24,6 +24,8 @@ router.get("/createramdonproducts", urlencodedParser, generateRandomProducts);
 router.get("/categories", urlencodedParser, getAllCategories);
 
 router.post("/productsbyfilters", urlencodedParser, postProductsByFilters);
+
+router.post("/countproductsadminfilters", urlencodedParser, postCountProductsAdminFilters);
 
 
 

@@ -171,6 +171,60 @@ const postProductsByFilters = async (req, res) => {
    res.status(200).json(products);
 };
 
+// Función para contar productos con filtros opcionales
+const postCountProductsAdminFilters = async (req, res) => {
+  const { _id, category, name } = req.body;
+
+  // Construir el objeto de filtros para la consulta
+  const filters = {};
+  if (_id) filters._id = _id;
+  if (category) filters.category = category;
+  if (name) filters.name = { $regex: new RegExp(name, "i") }; // Búsqueda insensible a mayúsculas
+
+  try {
+    // Contar el número de documentos que coinciden con los filtros
+    const count = await Product.countDocuments(filters);
+      // Verificar si no existen productos que coincidan con los filtros
+      if (count === 0) {
+        response(res, 200, { message: "No existen productos" });
+      } else {
+        // Responder con el conteo de productos
+        response(res, 200, { total: count });
+      }
+   
+  } catch (error) {
+    // Manejo de errores
+    console.error(error);
+    response(res, 500, { error: "Error al contar los productos" });
+  }
+};
+
+const getAllProductsAdminLimitFilters = async (req, res) => {
+  const { limit, offset, _id, category, name } = req.body;
+
+  // Construir el objeto de filtros para la consulta
+  const filters = {};
+  if (_id) filters._id = _id;
+  if (category) filters.category = category;
+  if (name) filters.name = { $regex: new RegExp(name, "i") }; // Búsqueda insensible a mayúsculas
+
+  try {
+    // Realizar la consulta con filtros, paginación y conteo total
+    const total = await Product.countDocuments(filters);
+    const products = await Product.find(filters)
+      .limit(limit)
+      .skip(offset);
+
+    // Responder con los productos y el conteo total
+    response(res, 200, { total, products });
+  } catch (error) {
+    // Manejo de errores
+    console.error(error);
+    response(res, 500, { error: "Error al obtener los productos" });
+  }
+};
+
+
 //contar los registros 
 
 
@@ -182,4 +236,6 @@ module.exports = {
   updateProductById: catchAsync(updateProductById),
   getAllCategories: catchAsync(getAllCategories),
   postProductsByFilters: catchAsync(postProductsByFilters),
+  postCountProductsAdminFilters:catchAsync(postCountProductsAdminFilters),
+  getAllProductsAdminLimitFilters:catchAsync(getAllProductsAdminLimitFilters)
 };
