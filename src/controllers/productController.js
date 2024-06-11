@@ -216,7 +216,8 @@ const getAllProductsAdminLimitFilters = async (req, res) => {
       .skip(offset);
 
     // Responder con los productos y el conteo total
-    response(res, 200, { total, products });
+    // response(res, 200, { total, products });
+    response(res, 200,  products );
   } catch (error) {
     // Manejo de errores
     console.error(error);
