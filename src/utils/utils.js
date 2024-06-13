@@ -67,7 +67,7 @@ function removeTimeFromDate(date) {
 }
 
 // Función para generar un SKU único ficticio
-const generateUniqueSKU = async () => {
+const generateUniqueSKU = async (Product) => {
   // Generar un SKU aleatorio
   const randomSKU = Math.random().toString(36).substring(2, 10).toUpperCase();
 
@@ -76,12 +76,13 @@ const generateUniqueSKU = async () => {
 
   // Si el SKU ya existe, llamar recursivamente a la función para generar uno nuevo
   if (existingProduct) {
-    return generateUniqueSKU();
+    return generateUniqueSKU(Product);
   }
 
   // Si el SKU es único, devolverlo
   return randomSKU;
 };
+
 
 const calculateTotalPrice=(lista)=>{
   let total=0;

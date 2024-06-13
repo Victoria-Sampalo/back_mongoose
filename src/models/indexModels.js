@@ -1,4 +1,5 @@
-const Product = require("./product");
+// ./src/models/indexModels.js
+const Product = require('./product');
 const User=require("./user");
 
 const Order=require("./detail_order")

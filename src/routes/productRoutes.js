@@ -9,7 +9,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 // products ninguno, product/:id
 // tokenValid -> createproduct, deleteuser, updateuser 
 // tokenValidAdmin -> createproduct, 
-router.post("/createproduct", urlencodedParser,tokenValidAdmin, postCreateProduct);
+router.post("/createproduct", urlencodedParser, tokenValidAdmin, postCreateProduct);
 
 router.get("/products", urlencodedParser, getAllProducts);
 
@@ -26,8 +26,6 @@ router.get("/categories", urlencodedParser, getAllCategories);
 router.post("/productsbyfilters", urlencodedParser, postProductsByFilters);
 
 router.post("/countproductsadminfilters", urlencodedParser, postCountProductsAdminFilters);
-
-
 
 router.post("/getallproductsadmin", urlencodedParser, getAllProductsAdminLimitFilters);
 

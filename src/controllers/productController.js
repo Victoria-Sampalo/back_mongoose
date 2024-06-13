@@ -1,48 +1,83 @@
-//./src/constrollers/productController.js
-const { Product } = require("../models/indexModels");
+// ./src/controllers/productController.js
+
+const { Product } = require('../models/indexModels');
+
 const {
-  catchAsync,
   response,
   ClientError,
-  validateText,
-  validateNumber,
-  validateDate,
+  catchAsync,
   generateUniqueSKU,
 } = require("../utils/indexUtils");
 
 // Crear producto
+// const postCreateProduct = async (req, res) => {
+//   console.log(req.body);
+//   console.log("postcreateproducto funcion")
+//   // Validar los datos del producto antes de crearlo
+//   // if (
+//   //   !validateText(req.body.name) ||
+//   //   !validateNumber(req.body.price) ||
+//   //   !validateText(req.body.brand) ||
+//   //   !validateText(req.body.category) ||
+//   //   !validateText(req.body.description) ||
+//   //   !validateNumber(req.body.stock)
+//   // ) {
+//   //   throw new ClientError("Los datos no son correctos", 400);
+//   // }
+ 
+//   const newProduct= new Product({
+//     sku: await generateUniqueSKU(),
+//     name: req.body.name,
+//     price: req.body.price,
+//     brand: req.body.brand,
+//     category: req.body.category,
+//     description: req.body.description,
+//     images: req.body.images,
+//     creation_date: Date.now(), // Fecha actual
+//     stock: req.body.stock,
+//     modify_date: Date.now(), // Fecha actual
+//   });
+
+ 
+
+//   console.log("newProduct "+ newProduct)
+
+//   // Guardar el nuevo producto
+//   const productSave = await newProduct.save();
+
+//   response(res, 200, productSave);
+// };
 const postCreateProduct = async (req, res) => {
-  console.log(req.body);
-  // Validar los datos del producto antes de crearlo
-  if (
-    !validateText(req.body.name) ||
-    !validateNumber(req.body.price) ||
-    !validateText(req.body.brand) ||
-    !validateText(req.body.category) ||
-    !validateText(req.body.description) ||
-    !validateNumber(req.body.stock)
-  ) {
-    throw new ClientError("Los datos no son correctos", 400);
+  try {
+    console.log('Recibido en postCreateProduct:', req.body);
+
+    const { name, price, brand, category, description, images, stock } = req.body;
+
+     // Llamar a generateUniqueSKU pasando el modelo Product
+     const sku = await generateUniqueSKU(Product);
+
+     const newProduct = new Product({
+       sku,
+       name,
+       price,
+       brand,
+       category,
+       description,
+       images,
+       stock,
+     });
+
+    console.log('Nuevo producto:', newProduct); // Asegúrate de que esto se imprima correctamente
+
+    const productSave = await newProduct.save();
+
+    response(res, 201, productSave);
+  } catch (error) {
+    console.error('Error en postCreateProduct:', error);
+    next(error); // Pasar el error al middleware de manejo de errores
   }
-
-  const newProduct = new Product({
-    sku: await generateUniqueSKU(),
-    name: req.body.name,
-    price: req.body.price,
-    brand: req.body.brand,
-    category: req.body.category,
-    description: req.body.description,
-    images: req.body.images,
-    creation_date: Date.now(), // Fecha actual
-    stock: req.body.stock,
-    modify_date: Date.now(), // Fecha actual
-  });
-
-  // Guardar el nuevo producto
-  const productSave = await newProduct.save();
-
-  response(res, 200, productSave);
 };
+
 
 // Función para obtener todos los productos
 const getAllProducts = async (req, res) => {
@@ -186,7 +221,7 @@ const postCountProductsAdminFilters = async (req, res) => {
     const count = await Product.countDocuments(filters);
       // Verificar si no existen productos que coincidan con los filtros
       if (count === 0) {
-        response(res, 200, { message: "No existen productos" });
+        response(res, 200, { total:0});
       } else {
         // Responder con el conteo de productos
         response(res, 200, { total: count });
