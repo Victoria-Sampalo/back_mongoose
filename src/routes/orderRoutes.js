@@ -4,7 +4,7 @@ const router = express.Router()
 
 const bodyParser = require('body-parser');
 
-const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById, getUserOrders } = require('../controllers/orderController');
+const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById, getUserOrders, postCountOrderAdminFilters, getAllOrdersAdminLimitFilters } = require('../controllers/orderController');
 const {tokenValid,tokenValidAdmin} =require ('../controllers/indexController.js')
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -16,7 +16,12 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 // tokenValidAdmin -> /orders, 
 router.post("/createorder", urlencodedParser,tokenValid, postCreateOrder);
 
-router.get("/orders", urlencodedParser,tokenValidAdmin, getAllOrders);
+router.get("/orders", urlencodedParser, getAllOrders);
+
+router.post("/countordersadminfilter", urlencodedParser,tokenValidAdmin, postCountOrderAdminFilters);
+
+router.post("/ordersadminlimitfilter", urlencodedParser,tokenValidAdmin, getAllOrdersAdminLimitFilters);
+
 
 router.post("/getuserorders", urlencodedParser,tokenValid, getUserOrders);
 
@@ -24,7 +29,7 @@ router.get("/order/:id", urlencodedParser,tokenValid, getOrderById);
 
 router.delete("/deleteorder/:id", urlencodedParser,tokenValidAdmin, deleteOrderById);
 
-router.put("/updateorder", urlencodedParser,tokenValid, updateOrderById);
+router.put("/updateorder", urlencodedParser,tokenValidAdmin, updateOrderById);
 
 
 module.exports = router;

@@ -191,7 +191,7 @@ const deleteOrderById = async (req, res) => {
 };
 
 // Modificar un detalle de pedido por su ID
-const updateOrderById = async (req, res) => {
+const updateOrderById_noUsada = async (req, res) => {
   try {
     const orderId = req.body.id;
     const updateText = {};
@@ -258,6 +258,103 @@ const updateOrderById = async (req, res) => {
   }
 };
 
+const updateOrderById= async (req, res) => {
+  try {
+    const { orderId, order_status } = req.body; // Obtener el nuevo estado desde el cuerpo de la solicitud
+
+    // Validar que el estado de la orden se proporcionó y es válido (puedes ajustar validateText según tus necesidades)
+    if (!order_status || !validateText(order_status)) {
+      throw new ClientError("Estado de orden inválido", 400);
+    }
+
+    // Actualizar solo el campo order_status
+    const updateText = { order_status };
+
+    // Buscar y actualizar la orden por su ID en la base de datos
+    const orderUpdate = await Order.findByIdAndUpdate(orderId, updateText, {
+      new: true, // Devuelve el documento actualizado
+    });
+
+    // Si no se encuentra la orden, devolver un error 404
+    if (!orderUpdate) {
+      throw new ClientError("Orden no encontrada", 404);
+    }
+
+    // Responder con la orden actualizada
+    res.status(200).json(orderUpdate); // Enviar el objeto actualizado como respuesta JSON
+  } catch (error) {
+    console.error("Error al actualizar orden:", error);
+    if (error instanceof ClientError) {
+      res.status(error.status).json({ error: error.message }); // Enviar un error específico como respuesta JSON
+    } else {
+      res.status(500).json({ error: "Error interno del servidor" }); // Enviar un error genérico como respuesta JSON
+    }
+  }
+  
+};
+
+
+//Función para contar todas las ordenes
+const postCountOrderAdminFilters = async (req, res) => {
+  const { _id, order_status, id_user, total_cost } = req.body;
+  // console.log(req.body);
+  // Construir el objeto de filtros para la consulta
+  const filters = {};
+  if (_id) filters._id = _id;
+  if (order_status) filters.order_status = order_status;
+  if (id_user) filters.id_user = id_user;
+  if (total_cost) filters.total_cost = total_cost;
+
+  try {
+    // Contar el número de documentos que coinciden con los filtros
+    const count = await Order.countDocuments(filters);
+
+    console.log(count);
+    // Verificar si no existen órdenes que coincidan con los filtros
+    if (count === 0) {
+      response(res, 200, { total: 0 });
+    } else {
+      // Responder con el conteo de órdenes
+      response(res, 200, { total: count });
+    }
+  } catch (error) {
+    // Manejo de errores
+    console.error(error);
+    response(res, 500, { error: "Error al contar las órdenes" });
+  }
+};
+
+//funcion que te da los pedidos en función de los filtros y de la paginación
+const getAllOrdersAdminLimitFilters = async (req, res) => {
+  const { limit, offset, _id, order_status, id_user, total_cost } = req.body;
+
+  // console.log(req.body);
+  // Construir el objeto de filtros para la consulta
+  const filters = {};
+  if (_id) filters._id = _id;
+  if (order_status) filters.order_status = order_status;
+  if (id_user) filters.id_user = id_user;
+  if (total_cost) filters.total_cost = total_cost;
+
+  try {
+    // Realizar la consulta con filtros, paginación y conteo total
+    const total = await Order.countDocuments(filters);
+    const orders = await Order.find(filters)
+      .limit(limit)
+      .skip(offset);
+    
+      console.log(total + " "+ orders);
+    // Responder con las órdenes y el conteo total
+    response(res, 200,  orders );
+  } catch (error) {
+    // Manejo de errores
+    console.error(error);
+    response(res, 500, { error: "Error al obtener las órdenes" });
+  }
+};
+
+
+
 module.exports = {
   postCreateOrder: catchAsync(postCreateOrder),
   getAllOrders: catchAsync(getAllOrders),
@@ -265,4 +362,6 @@ module.exports = {
   deleteOrderById: catchAsync(deleteOrderById),
   updateOrderById: catchAsync(updateOrderById),
   getUserOrders: catchAsync(getUserOrders),
+  postCountOrderAdminFilters:catchAsync(postCountOrderAdminFilters),
+  getAllOrdersAdminLimitFilters:catchAsync(getAllOrdersAdminLimitFilters)
 };

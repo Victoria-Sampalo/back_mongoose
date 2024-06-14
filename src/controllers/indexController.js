@@ -1,7 +1,7 @@
 // src/controllers/indexControllers.js
 const { postCreateUser, getAllUsers, getUserById, deleteUserById, updateUserById } = require("./userController");
 const { postCreateProduct, getAllProducts, getProductById, deleteProductById, updateProductById, getAllCategories, postProductsByFilters, postCountProductsAdminFilters, getAllProductsAdminLimitFilters } = require("./productController");
-const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById, getUserOrders } = require("./orderController");
+const { postCreateOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById, getUserOrders, postCountOrderAdminFilters, getAllOrdersAdminLimitFilters } = require("./orderController");
 const { register, login, validToken } = require("./loginController");
 const {tokenValid, tokenValidAdmin} = require("./authController");
 
@@ -30,7 +30,9 @@ module.exports = {
     tokenValid,
     tokenValidAdmin,
     postCountProductsAdminFilters,
-    getAllProductsAdminLimitFilters
+    getAllProductsAdminLimitFilters,
+    postCountOrderAdminFilters,
+    getAllOrdersAdminLimitFilters
 
 
 };

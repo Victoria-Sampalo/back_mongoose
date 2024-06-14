@@ -89,6 +89,9 @@ const validToken=async(req,res)=>{
 
 }
 
+
+
+
 //La funcion catch tiene que tratar los errores
 module.exports={
   register:catchAsync(register),
