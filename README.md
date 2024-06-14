@@ -108,7 +108,7 @@ Desplegar: Render se encargará de construir y desplegar la aplicación automát
 
 
 ```plaintext
- POST /createproduct - Crea un nuevo producto (Requiere autenticación de administrador).
+POST /createproduct - Crea un nuevo producto (Requiere autenticación de administrador).
 GET /products - Obtiene todos los productos.
 GET /product/:id - Obtiene un producto por su ID.
 DELETE /deleteproduct/:id - Elimina un producto por su ID (Requiere autenticación de administrador).
@@ -134,7 +134,9 @@ GET /orders - Obtiene todos los pedidos (Requiere autenticación de administrado
 POST /getuserorders - Obtiene pedidos de un usuario (Requiere autenticación).
 GET /order/:id - Obtiene un pedido por su ID (Requiere autenticación).
 DELETE /deleteorder/:id - Elimina un pedido por su ID (Requiere autenticación de administrador).
-PUT /updateorder - Actualiza un pedido (Requiere autenticación).
+PUT /updateorder - Actualiza el status de un pedido (Requiere autenticación).
+POST /countordersadminfilter - Obtiene el número de pedidos según los filtros (Requiere autenticación).
+POST /ordersadminlimitfilter - Obtiene los pedidos según paginación y filtros (Requiere autenticación).
 ```
  ### 👥 Usuarios
 
